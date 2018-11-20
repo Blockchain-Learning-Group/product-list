@@ -1,9 +1,0 @@
-{
-    "scripts": {
-        "start": "node node_modules/watch-http-server/bin/http-server"
-    },
-    "dependencies": {
-        "watch-http-server": "^0.7.6",
-        "web3": "^0.20.6"
-    }
-}
