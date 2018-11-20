@@ -1,13 +1,40 @@
 class ProductList extends React.Component {
   state = {
     products: [],
+    productRegistry: null,
+    web3: null
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:9545"));
+    await window.loadBuildArtifacts();
+
+    const networkId = await window.getNetwork(web3);
+    const ProductRegistryArtifacts = window.buildArtifacts['ProductRegistry1'];
+    const abi = ProductRegistryArtifacts.abi;
+    const address = ProductRegistryArtifacts.networks[networkId].address;
+    const contract = web3.eth.contract(abi).at(address);
+
+    // Log the contract object to the browser's developer console
+    console.log(contract)
+
+    this.setState({ web3: web3 });
     this.setState({ products: Seed.products });
+    this.setState({ productRegistry: contract });
   }
 
-  handleProductUpVote = (productId) => {
+  handleProductUpVote = async (productId) => {
+    // Onchain interaction
+    // const { productRegistry, web3 } = this.state;
+    
+    // // Default to the 0th account
+    // const sender = web3.eth.accounts[0];
+    // const gas = 1e6
+    // console.log(
+    //   await productRegistry.addProduct('testtest', 'ipfsURL', { from: sender, gas: gas })
+    // );
+
+    // Client side interaction
     const nextProducts = this.state.products.map((product) => {
       if (product.id === productId) {
         return Object.assign({}, product, {
